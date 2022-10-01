@@ -1,0 +1,5 @@
+APOLLO_KEY=service:Pan-Am-Demo-Supergraph:VxuzKpXs9RZ41XXRCeIgng \
+  rover subgraph publish Pan-Am-Demo-Supergraph@current \
+  --schema ./products-schema.graphql \
+  --name your-subgraph-name \
+  --routing-url http://products.prod.svc.cluster.local:4001/graphql
