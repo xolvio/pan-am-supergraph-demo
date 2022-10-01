@@ -123,7 +123,6 @@ const server = new ApolloServer({
   }),
 });
 
-// The `listen` method launches a web server.
-server.listen(4001).then(({ url }) => {
+server.listen({ port: process.env.PORT || 4001 }).then(({ url }) => {
   console.log(`🚀 Loyalty Service ready at ${url}`);
 });
