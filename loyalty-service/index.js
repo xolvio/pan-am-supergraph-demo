@@ -1,24 +1,19 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildSubgraphSchema } = require("@apollo/subgraph");
+const { readFileSync } = require("fs");
 
 const FLIGHTS_DATA = [
   {
     id: 101,
     loyaltyAccounts: [201, 202],
-    year: 2021,
-    miles: 1000,
   },
   {
     id: 102,
     loyaltyAccounts: [202, 203],
-    year: 2022,
-    miles: 2000,
   },
   {
     id: 103,
     loyaltyAccounts: [201, 203],
-    year: 2022,
-    miles: 3000,
   },
 ];
 
@@ -26,14 +21,17 @@ const LOYALTY_ACCOUNTS_DATA = [
   {
     id: 201,
     loyaltyStatus: "Gold",
+    name: "Curly",
   },
   {
     id: 202,
     loyaltyStatus: "Silver",
+    name: "Moe",
   },
   {
     id: 203,
     loyaltyStatus: "Bronze",
+    name: "Larry",
   },
 ];
 
@@ -62,43 +60,21 @@ function getLoyaltyAccountsByFlight(flightId) {
   );
 }
 
+function getLoyaltyAccountsByDestination(args, context) {
+  console.log(JSON.stringify(args));
+  console.log(JSON.stringify(context));
+}
+
 function getFlight(id) {
   return FLIGHTS_DATA.find((flight) => flight.id === +id);
 }
 
+const schemaString = readFileSync(require.resolve("./schema.graphql")).toString(
+  "utf-8"
+);
+
 const typeDefs = gql`
-  extend schema
-    @link(
-      url: "https://specs.apollo.dev/federation/v2.0"
-      import: ["@key", "@shareable"]
-    )
-
-  type Flight @key(fields: "id") {
-    id: ID!
-    loyaltyAccounts: [LoyaltyAccount]
-    year: Int
-    miles: Int
-  }
-
-  type MilesAccumulated {
-    loyaltyAccountId: ID!
-    miles: Int!
-    year: Int
-  }
-
-  type LoyaltyAccount {
-    id: ID!
-    loyaltyStatus: String
-  }
-
-  type Query {
-    loyaltyAccount(id: ID!): LoyaltyAccount
-    milesAccumulatedPerCalendarYear(
-      loyaltyAccountId: ID!
-      year: Int!
-    ): MilesAccumulated
-    loyaltyAccountsByFlight(flightId: ID!): [LoyaltyAccount]
-  }
+  ${schemaString}
 `;
 
 const resolvers = {
@@ -111,7 +87,10 @@ const resolvers = {
   },
   Flight: {
     __resolveReference(flight) {
-      return getFlight(flight.id);
+      flight.loyaltyAccounts = getFlight(flight.id).loyaltyAccounts.map((id) =>
+        getLoyaltyAccount(id)
+      );
+      return flight;
     },
   },
 };

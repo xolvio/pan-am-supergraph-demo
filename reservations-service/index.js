@@ -1,5 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildSubgraphSchema } = require("@apollo/subgraph");
+const { readFileSync } = require("fs");
 
 const FLIGHTS_DATA = [
   {
@@ -20,20 +21,12 @@ function getFlight(id) {
   return FLIGHTS_DATA.find((flight) => flight.id === +id);
 }
 
-const typeDefs = gql`
-  extend schema
-    @link(
-      url: "https://specs.apollo.dev/federation/v2.0"
-      import: ["@key", "@shareable"]
-    )
+const schemaString = readFileSync(require.resolve("./schema.graphql")).toString(
+  "utf-8"
+);
 
-  type Flight @key(fields: "id") {
-    id: ID!
-    discount: Int
-  }
-  type Query {
-    flight(id: ID!): Flight
-  }
+const typeDefs = gql`
+  ${schemaString}
 `;
 
 const resolvers = {
