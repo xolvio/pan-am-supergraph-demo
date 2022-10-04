@@ -1,0 +1,82 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.2", for: EXECUTION)
+{
+  query: Query
+}
+
+directive @join__field(graph: join__Graph!, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+type Flight
+  @join__type(graph: PAN_AM_FLIGHT_OPS, key: "id")
+  @join__type(graph: PAN_AM_LOYALTY, key: "id")
+  @join__type(graph: PAN_AM_RESERVATIONS, key: "id")
+{
+  id: ID!
+  origin: String @join__field(graph: PAN_AM_FLIGHT_OPS)
+  destination: String @join__field(graph: PAN_AM_FLIGHT_OPS)
+  year: Int @join__field(graph: PAN_AM_FLIGHT_OPS)
+  miles: Int @join__field(graph: PAN_AM_FLIGHT_OPS)
+  numHoursDelayed: Int @join__field(graph: PAN_AM_FLIGHT_OPS)
+  loyaltyAccounts: [LoyaltyAccount] @join__field(graph: PAN_AM_LOYALTY)
+  discount: Int @join__field(graph: PAN_AM_RESERVATIONS)
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  PAN_AM_FLIGHT_OPS @join__graph(name: "pan-am-flight-ops", url: "https://pan-am-flight-ops.herokuapp.com/graphql")
+  PAN_AM_LOYALTY @join__graph(name: "pan-am-loyalty", url: "https://pan-am-loyalty.herokuapp.com/graphql")
+  PAN_AM_RESERVATIONS @join__graph(name: "pan-am-reservations", url: "https://pan-am-reservations.herokuapp.com/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type LoyaltyAccount
+  @join__type(graph: PAN_AM_LOYALTY)
+{
+  id: ID!
+  loyaltyStatus: String
+  name: String
+}
+
+type MilesAccumulated
+  @join__type(graph: PAN_AM_LOYALTY)
+{
+  loyaltyAccountId: ID!
+  miles: Int!
+  year: Int
+}
+
+type Query
+  @join__type(graph: PAN_AM_FLIGHT_OPS)
+  @join__type(graph: PAN_AM_LOYALTY)
+  @join__type(graph: PAN_AM_RESERVATIONS)
+{
+  flightsByDestination(destination: String!): [Flight] @join__field(graph: PAN_AM_FLIGHT_OPS)
+  delayedFlights(hoursDelayed: Int!): [Flight] @join__field(graph: PAN_AM_FLIGHT_OPS)
+  loyaltyAccount(id: ID!): LoyaltyAccount @join__field(graph: PAN_AM_LOYALTY)
+  milesAccumulatedPerCalendarYear(loyaltyAccountId: ID!, year: Int!): MilesAccumulated @join__field(graph: PAN_AM_LOYALTY)
+  loyaltyAccountsByFlight(flightId: ID!): [LoyaltyAccount] @join__field(graph: PAN_AM_LOYALTY)
+  flight(id: ID!): Flight @join__field(graph: PAN_AM_RESERVATIONS)
+}

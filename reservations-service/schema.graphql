@@ -1,0 +1,14 @@
+extend schema
+@link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: ["@key", "@shareable"]
+)
+
+type Flight @key(fields: "id") {
+    id: ID!
+    discount: Int
+}
+
+type Query {
+    flight(id: ID!): Flight
+}

@@ -1,0 +1,19 @@
+extend schema
+    @link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: ["@key", "@shareable"]
+)
+
+type Flight @key(fields: "id") {
+    id: ID!
+    origin: String
+    destination: String @shareable
+    year: Int @shareable
+    miles: Int @shareable
+    numHoursDelayed: Int @shareable
+}
+
+type Query {
+    flightsByDestination(destination: String!): [Flight]
+    delayedFlights(hoursDelayed: Int!): [Flight]
+}

@@ -1,0 +1,31 @@
+extend schema
+    @link(
+    url: "https://specs.apollo.dev/federation/v2.0"
+    import: ["@key", "@shareable", "@external"]
+)
+
+type Flight @key(fields: "id") {
+    id: ID!
+    loyaltyAccounts: [LoyaltyAccount]
+}
+
+type MilesAccumulated {
+    loyaltyAccountId: ID!
+    miles: Int!
+    year: Int
+}
+
+type LoyaltyAccount {
+    id: ID!
+    loyaltyStatus: String
+    name: String
+}
+
+type Query {
+    loyaltyAccount(id: ID!): LoyaltyAccount
+    milesAccumulatedPerCalendarYear(
+    loyaltyAccountId: ID!
+    year: Int!
+    ): MilesAccumulated
+    loyaltyAccountsByFlight(flightId: ID!): [LoyaltyAccount]
+}
