@@ -15,8 +15,11 @@ The migration focuses on a single feature - flight check-in - and goes through t
 The code examples are organized as follows:
 
 `bffs/` - Contains the original BFFs for web, mobile, and kiosk clients
+
 `services/` - Contains the migrated GraphQL services for flights, passengers, bookings
+
 `federated-gateway/` - Contains the Apollo gateway
+
 `demand-discovery/queries.graphql` - Ideal client GraphQL queries modeled in Step 3
 
 ## Running the Code
