@@ -1,27 +1,45 @@
-# Pan Am Demo Supergraph
+# Event Storming 101
 
-This repo contains code examples to accompany blog posts on event storming and migrating from BFFs to GraphQL federation.
+This repo contains code examples to accompany the article [Event Storm to Production Supergraph: A Domain-Driven Design Approach to GraphQL](https://www.apollographql.com/blog/event-storm-to-production-supergraph-a-domain-driven-design-approach-to-graphql/).
 
-Pan Am airlines has dusted off their 1970s mainframe to provide some handy examples. Let's hope this new GraphQL system has a better flight plan than the real Pan Am. ✈️
+## Overview
 
-## Contents
+The article demonstrates using event storming and domain-driven design techniques to model a system and derive a GraphQL schema.
 
-`event-storming-101/`
+It uses a fictional airline system as an example, modeling loyalty, reservations, and flight operations domains.
 
-This folder contains the code demo for the article [Event Storm to Production Supergraph: A Domain-Driven Design Approach to GraphQL](https://www.xolv.io/blog/articles/event-storm-to-production-supergraph-a-domain-driven-design-approach-to-graphql/)
+## Code Structure
 
-It showcases using event storming and domain-driven design to model a system and derive a GraphQL schema. The example models an airline loyalty system across flight reservations, flight operations, and loyalty domains.
+The code mirrors the example domains from the article:
 
-`bff-to-federation-migration/`
+- `reservations-service` - GraphQL microservice for reservations domain
+- `flight-ops-service` - GraphQL microservice for flight operations domain
+- `loyalty-service` - GraphQL microservice for loyalty domain
+- `router` - Apollo gateway stitching services into a supergraph
 
-This folder contains code examples for the article [Migrating from BFFs to a Federated GraphQL API](https://www.xolv.io/blog/articles/how-to-move-from-bffs-to-graphql-federation/)
+## Running the Code
 
-It demonstrates an incremental migration approach from backend-for-frontend (BFF) services to a GraphQL federation architecture. The example focuses on migrating a flight check-in feature across web, mobile, and kiosk clients.
+From each service folder:
 
-## Try It Yourself
+```
+npm install
+npm start
+```
 
-Follow the README in each folder for instructions to run the code examples locally.
+The services run on ports 4001-4003.
 
-Just be careful not to accidentally shut down a real airline! Pan Am ran out of runway long ago so we're just pretending here.
+Start the gateway last on port 4004:
 
-Let us know if you have any other ideas for demonstrating GraphQL architectures and migrations using this fake airline demo schema!
+```
+cd router
+npm install 
+npm start
+```
+
+You can then query the supergraph API at http://localhost:4004.
+
+## Additional Context
+
+See the accompanying blog post for a full walkthrough of how event storming was used to model the domain and derive the GraphQL schemas for each service.
+
+The `supergraph.graphql` schema shows how the services are stitched together into a unified graph using Apollo Gateway.
