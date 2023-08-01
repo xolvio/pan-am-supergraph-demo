@@ -1,0 +1,35 @@
+query GetBookingFees($bookingId: ID!) {
+  bookingFees(bookingId: $bookingId) {
+    bagPrice
+    flight {
+      canAcceptMoreBags
+    }
+    passenger {
+      passengerType
+      accountCredits
+    }
+  }
+}
+
+query GetBooking($bookingId: ID!) {
+  booking(bookingId: $bookingId) {
+    passenger {
+      bagsAllowed
+      passengerType
+    }
+    flight {
+      passengers
+    }
+  }
+}
+
+query GetSeatAvailability($bookingId: ID!) {
+  seatAvailability(bookingId: $bookingId) {
+    flight {
+      hasAvailableSeats
+    }
+    passenger {
+      hasFreeUpgrade
+    }
+  }
+}

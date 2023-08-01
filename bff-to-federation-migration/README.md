@@ -1,12 +1,55 @@
-# Migrating from BFFs to a Federated GraphQL API 
+# Migrating from BFFs to GraphQL Federation
+This repo contains code examples to accompany the blog post "Migrating from BFFs to a Federated GraphQL API".
 
-Check out the Apollo Tech Talk [here](https://www.apollographql.com/events/tech-talk/thank-you/how-to-migrate-from-bffs-to-a-federated-graphql-api)
+## Overview
+The blog post walks through an incremental migration path from a BFF architecture to a GraphQL federation API. It uses a fictional airline booking system as an example.
 
-<a href="https://www.apollographql.com/events/tech-talk/thank-you/how-to-migrate-from-bffs-to-a-federated-graphql-api"><img width="500" alt="image" src="https://github.com/samjcombs/pan-am-supergraph-demo/assets/104232548/2e6d9ae8-2e06-46f8-90d1-80fe5d657ec9">
-</a>
+The migration focuses on a single feature - flight check-in - and goes through the following steps:
 
-## Coming Soon
+1. Feature investigation
+2. Deduping read models
+3. Modeling entities
+4. Federating entities along domain boundaries
 
-In the talk, a few patterns were mentioned in relation to migrating BFFs to a Federated GraphQL API.  
+## Code Structure
+The code examples are organized as follows:
 
-Code examples are in progress with working BFFs, clients that transition from the BFFs to the federated GraphQL endpoint, and the subsequent Apollo Router, subgraphs, and microservice applications powering these subgraphs.  
+`bffs/` - Contains the original BFFs for web, mobile, and kiosk clients
+`services/` - Contains the migrated GraphQL services for flights, passengers, bookings
+`federated-gateway/` - Contains the Apollo gateway
+`demand-discovery/queries.graphql` - Ideal client GraphQL queries modeled in Step 3
+
+## Running the Code
+
+To run the BFFs:
+```
+cd bffs
+npm install
+npm start
+```
+
+To run the GraphQL services:
+```
+cd services/booking
+npm install
+npm start
+
+cd services/flight
+npm install
+npm start
+
+cd services/passenger
+npm install
+npm start
+```
+
+To run the gateway:
+```
+cd federated-gateway
+npm install
+npm start
+```
+The services run on ports 4001-4003 with the gateway on 4000.
+
+## Additional Context
+See the accompanying article [Migrating from BFFs to a Federated GraphQL API](https://www.xolv.io/blog/articles/how-to-move-from-bffs-to-graphql-federation/) for full details and explanation behind the migration process.
