@@ -15,34 +15,41 @@ The migration focuses on a single feature - flight check-in - and goes through t
 The code examples are organized as follows:
 
 `bffs/` - Contains the original BFFs for web, mobile, and kiosk clients
-`services/` - Contains the migrated GraphQL services for flights, passengers, bookings, and the Apollo gateway
+`services/` - Contains the migrated GraphQL services for flights, passengers, bookings
+`federated-gateway/` - Contains the Apollo gateway
 `demand-discovery/queries.graphql` - Ideal client GraphQL queries modeled in Step 3
 
 ## Running the Code
-To run the BFFs:
 
+To run the BFFs:
 ```
 cd bffs
 npm install
-node kiosk/server.js
-node mobile/server.js
-
-node web/server.js
+npm start
 ```
 
 To run the GraphQL services:
-
 ```
-
-cd services
+cd services/booking
 npm install
-node FlightService.js
-node PassengerService.js
-node BookingService.js
-node ApolloGateway.js
+npm start
+
+cd services/flight
+npm install
+npm start
+
+cd services/passenger
+npm install
+npm start
 ```
 
+To run the gateway:
+```
+cd federated-gateway
+npm install
+npm start
+```
 The services run on ports 4001-4003 with the gateway on 4000.
 
 ## Additional Context
-See the accompanying blog post for full details and explanation behind the migration process.
+See the accompanying article [Migrating from BFFs to a Federated GraphQL API](https://www.xolv.io/blog/articles/how-to-move-from-bffs-to-graphql-federation/) for full details and explanation behind the migration process.

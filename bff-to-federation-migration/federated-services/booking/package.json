@@ -1,0 +1,9 @@
+{
+  "name": "booking-service",
+  "version": "1.0.0",
+  "main": "BookingService.js",
+  "dependencies": {
+    "@apollo/subgraph": "^2.5.1",
+    "apollo-server": "^3.12.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "federated-gateway",
+  "version": "1.0.0",
+  "main": "ApolloGateway.js",
+  "dependencies": {
+    "@apollo/gateway": "^2.5.1",
+    "apollo-server": "^3.12.0"
+  }
+}
